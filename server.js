@@ -80,6 +80,10 @@ app.get('/linkAndCompile',function(req,res){
   //__dirname : It will resolve to your project folder.
 });
 
+app.get('/linkAndCompileExecution',function(req,res){
+  res.sendFile(path.join(__dirname+'/src/linkAndCompileExecution.html'));
+  //__dirname : It will resolve to your project folder.
+});
 
 app.listen(15000);
 

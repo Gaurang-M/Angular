@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+	<!-- jQuery library -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+	<!-- Latest compiled JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.js"></script>
+</head>
+<script type="text/javascript">
+	var app = angular.module("myapp",[]);
+	app.controller("employee",["$scope","employeeDataService","$filter",function($scope,employeeDataService,$filter){
+		$scope.searchText = "";
+		employeeDataService.getEmployee(function(empData){
+			$scope.empData = empData.map(function(e){
+				e.firstName = $filter('uppercase')(e.firstName);
+				return e;
+			});
+		});
+	}])
+	app.service("employeeDataService",["$http",function($http){
+		this.getEmployee = function(cb){
+			$http.get("http://localhost:15000/getAllEmployee")
+		    .then(function(response) {
+		        cb(response.data.data.data);
+	    	},function(err){
+
+	    	});
+		}
+	}])
+	app.directive("emp",[function(){
+		return {
+			compile: function(element,attrs){
+				element.css('border','1px solid gray');
+				return {
+					post : function(scope,element,attrs){
+						scope.empName = attrs.text;
+						if(scope.empName == "ROMIN"){
+							element.css('border','1px solid red');
+						}
+					}
+				}
+			},
+			template : "<div>{{empName}}</div>"
+		}
+	}])
+</script>
+<body ng-app="myapp"> 
+	<div ng-controller="employee">
+		<div emp ng-repeat="e in empData" text={{e.firstName}} ></div>
+	</div>
+
+</body>
+</html>
