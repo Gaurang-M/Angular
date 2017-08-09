@@ -2,6 +2,32 @@ var express = require("express");
 var app     = express();
 var path    = require("path");
 app.use(express.static('public'))
+var cors = require('cors');
+app.use(cors()); 
+
+const empData = require('./model/data');
+
+app.get('/sum', function (req, res) {
+  var a = parseInt(req.query.a);
+  var b = parseInt(req.query.b);
+  res.status(200).send({"data":a+b});
+})
+
+app.get('/getEmployee',function(req, res){
+  var empId = req.query.empId;
+  var empFound = {};
+  empData['Employees'].map(function(emp){
+    if(emp['id'] == empId){
+      empFound = emp;
+    }
+  })
+  res.status(200).send({data:empFound});
+})
+
+app.get('/getAllEmployee',function(req, res){
+  res.status(200).send({data:{data:empData['Employees']}});
+})
+
 
 
 app.get('/bindings',function(req,res){

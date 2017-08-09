@@ -26,7 +26,7 @@
 	}])
 	app.service("employeeDataService",["$http",function($http){
 		this.getEmployee = function(cb){
-			$http.get("http://localhost:3000/getAllEmployee")
+			$http.get("http://localhost:15000/getAllEmployee")
 		    .then(function(response) {
 		        cb(response.data.data.data);
 	    	},function(err){
