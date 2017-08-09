@@ -1,6 +1,7 @@
 var express = require("express");
 var app     = express();
 var path    = require("path");
+var fs = require("fs");
 app.use(express.static('public'))
 var cors = require('cors');
 app.use(cors()); 
@@ -29,61 +30,15 @@ app.get('/getAllEmployee',function(req, res){
 })
 
 
-
-app.get('/bindings',function(req,res){
-  res.sendFile(path.join(__dirname+'/src/bindings.html'));
-  //__dirname : It will resolve to your project folder.
-});
-
-app.get('/controllers',function(req,res){
-  res.sendFile(path.join(__dirname+'/src/controllers.html'));
-  //__dirname : It will resolve to your project folder.
-});
-
-app.get('/customDirective',function(req,res){
-  res.sendFile(path.join(__dirname+'/src/customDirective.html'));
-  //__dirname : It will resolve to your project folder.
-});
-
-app.get('/factory',function(req,res){
-  res.sendFile(path.join(__dirname+'/src/factory.html'));
-  //__dirname : It will resolve to your project folder.
-});
-
-app.get('/filter',function(req,res){
-  res.sendFile(path.join(__dirname+'/src/filter.html'));
-  //__dirname : It will resolve to your project folder.
-});
-
-app.get('/introduction',function(req,res){
-  res.sendFile(path.join(__dirname+'/src/introduction.html'));
-  //__dirname : It will resolve to your project folder.
-});
-
-app.get('/promises',function(req,res){
-  res.sendFile(path.join(__dirname+'/src/promises.html'));
-  //__dirname : It will resolve to your project folder.
-});
-
-app.get('/provider',function(req,res){
-  res.sendFile(path.join(__dirname+'/src/provider.html'));
-  //__dirname : It will resolve to your project folder.
-});
-
-app.get('/services',function(req,res){
-  res.sendFile(path.join(__dirname+'/src/services.html'));
-  //__dirname : It will resolve to your project folder.
-});
-
-app.get('/linkAndCompile',function(req,res){
-  res.sendFile(path.join(__dirname+'/src/linkAndCompile.html'));
-  //__dirname : It will resolve to your project folder.
-});
-
-app.get('/linkAndCompileExecution',function(req,res){
-  res.sendFile(path.join(__dirname+'/src/linkAndCompileExecution.html'));
-  //__dirname : It will resolve to your project folder.
-});
+fs.readdir('./src', (err, files) => {
+  files.forEach(file => {
+    let route = file.split(".")[0];
+    app.get("/"+route,function(req,res){
+      res.sendFile(path.join(__dirname+'/src/'+file));
+      //__dirname : It will resolve to your project folder. 
+    });
+  });
+})
 
 app.listen(15000);
 

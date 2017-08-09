@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.js"></script>
+</head>
+<script type="text/javascript">
+	var app = angular.module("myapp",[]);
+	app.controller("person",["$scope","$filter",function($scope,$filter){
+		$scope.name = "Gauang Manjrekar";
+		$scope.profession = "IT Engineer";
+		$scope.mail = "gaurang.ma@gmail.com";
+		$scope.displaySal = function(){
+			$scope.sal = $filter('currency')(2500000);
+		}
+	}])
+	app.directive("emp",["$filter",function($filter){
+		return {
+			scope: {},
+			controller: function($scope,$element,$attrs){
+				$scope.displaySal = function(){
+					$scope.sal = $filter('currency')(3500000);
+				}
+			},
+			templateUrl : "personTemplate.html"
+		}
+	}])
+</script>
+<body ng-app="myapp"> 
+	<div ng-controller="person">
+		Name : {{name}}<br>
+		Profession : {{profession}}<br>
+		Mail Id : {{mail}}<br>
+		sal : {{sal}}<br>
+		<button ng-click="displaySal()">displaySal</button><hr>
+		<div emp></div>
+	</div>
+
+</body>
+</html>
