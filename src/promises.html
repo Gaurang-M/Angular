@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.js"></script>
+</head>
+<script type="text/javascript">
+	var app = angular.module("myapp",[]);
+	app.controller("employee",["$scope","$timeout","$q",function($scope,$timeout,$q){
+		/*function add(a,b){
+			return a+b;
+		}
+		$scope.add = add(1,2);*/
+
+		/*function add(a,b,cb){
+			cb(a+b);
+		}
+		add(1,2,function(result){
+			$scope.add = result
+		});*/
+
+		/*function add(a,b,cb){
+			$timeout(function(){
+				cb(a+b);
+			},100);
+		}
+		var now = new Date().getTime();
+		add(1,2,function(result){
+			$scope.add = result
+			$scope.elapsedDate = now - new Date().getTime();
+		});*/
+
+		/*function add(a,b,cb){
+			$timeout(function(){
+				cb(a+b);
+			},100);
+		}
+		var now = new Date().getTime();
+		add(1,2,function(result){
+			add(result,3,function(result){
+				add(result,7,function(result){
+					$scope.add = result
+					$scope.elapsedDate = now - new Date().getTime();
+				})
+			});
+		});*/
+
+		/*function add(a,b){
+			return $timeout(function(){
+				return (a+b);
+			},100);
+		}
+		var now = new Date().getTime();
+		add(1,2).
+		then(function(result){
+			return add(result,3);
+		}).
+		then(function(result){
+			return add(result,7);
+		}).
+		then(function(result){
+			$scope.add = result
+			$scope.elapsedDate = now - new Date().getTime();
+		})*/
+
+		/*function add(a,b){
+			var promise = $q.defer();
+			$timeout(function(){
+				promise.resolve(a+b);
+			},100);
+			return promise.promise;
+		}
+		var now = new Date().getTime();
+		add(1,2).
+		then(function(result){
+			return add(result,3);
+		}).
+		then(function(result){
+			return add(result,7);
+		}).
+		then(function(result){
+			$scope.add = result
+			$scope.elapsedDate = now - new Date().getTime();
+		})*/
+
+		function add(a,b){
+			var promise = $q.defer();
+			$timeout(function(){
+				var sum = a+b;
+				if(sum >= 0){
+					promise.resolve(a+b);
+				}else{
+					promise.reject(a+b);
+				}
+			},100);
+			return promise.promise;
+		}
+		var now = new Date().getTime();
+		add(1,2).
+		then(function(result){
+			return add(result,-3);
+		}).
+		then(function(result){
+			return add(result,-7);
+		}).
+		then(function(result){
+			$scope.add = result
+		}).
+		catch(function(){
+			$scope.err = "sum is negative !"
+		}).
+		finally(function(){
+			$scope.elapsedDate = now - new Date().getTime();
+		})
+
+	}])
+</script>
+<body ng-app="myapp"> 
+	<div ng-controller="employee">
+		<!-- 1) {{1+2}} -->
+		{{add}}
+		{{elapsedDate}}
+		{{err}}
+	</div>
+</body>
+</html>

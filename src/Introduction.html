@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Angular JS</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.js"></script>
+</head>
+<script type="text/javascript">
+	var app = angular.module("myApp",[]);
+	app.controller("myController",["$scope",function($scope){
+		$scope.a = 1;
+		$scope.update = function(){
+			$scope.a++
+		}
+	}])
+</script>
+<body ng-app="myApp">
+	<div ng-controller="myController">
+		{{a}}<button ng-click="update()">update a</button>{{::a}}
+	</div>
+</body>
+</html>

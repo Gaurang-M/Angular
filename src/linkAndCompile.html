@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.js"></script>
+</head>
+<script type="text/javascript">
+	var app = angular.module("myapp",[]);
+	app.controller("employee",["$scope",function($scope){
+	}])
+	app.directive("emp",[function(){
+		return {
+			compile:function(element,attrs){
+				console.log("compile :"+attrs.text);
+				return {
+					pre:function(scope,element,attrs){
+						console.log("pre :"+attrs.text);
+					},
+					post:function(scope,element,attrs){
+						console.log("post :"+attrs.text);
+					}
+				}
+			},
+			controller:function($scope,$element,$attrs){
+				console.log("controller :"+$attrs.text);
+			}
+
+		}
+	}])
+</script>
+<body ng-app="myapp"> 
+	<div ng-controller="employee">
+		<div emp text="1">
+			<div emp text=".2">
+				<div emp text="..3">
+					
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

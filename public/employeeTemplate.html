@@ -1,0 +1,35 @@
+<div>
+		<input type="text" ng-model="searchText">
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<td>id</td>
+						<td>userId</td>
+						<td>jobTitleName</td>
+						<td>firstName</td>
+						<td>lastName</td>
+						<td>salary</td>
+						<td>preferredFullName</td>
+						<td>employeeCode</td>
+						<td>region</td>
+						<td>phoneNumber</td>
+						<td>emailAddress</td>
+						<td>doj</td>
+					</tr>
+				</thead>
+				<tr ng-repeat="emp in empData | filter:{firstName : searchText}">
+					<td>{{emp.id}}</td>
+					<td>{{emp.userId}}</td>
+					<td>{{emp.jobTitleName}}</td>
+					<td>{{emp.firstName}}</td>
+					<td>{{emp.lastName}}</td>
+					<td><span ng-if="emp.salary < 30000" class="glyphicon glyphicon-warning-sign"></span>{{emp.salary | currency:'$':2}}</td>
+					<td>{{emp.preferredFullName}}</td>
+					<td>{{emp.employeeCode}}</td>
+					<td>{{emp.region}}</td>
+					<td>{{emp.phoneNumber}}</td>
+					<td>{{emp.emailAddress}}</td>
+					<td>{{emp.doj | date:'medium'}}</td>
+				</tr>
+			</table>
+		</div>

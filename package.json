@@ -1,0 +1,13 @@
+{
+  "name": "express-html",
+  "version": "0.0.1",
+  "dependencies": {
+    "express": "^4.11.0"
+  },
+  "scripts": {
+    "start": "./node_modules/nodemon/bin/nodemon.js server.js"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
+  }
+}

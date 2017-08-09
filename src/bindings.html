@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.js"></script>
+</head>
+<script type="text/javascript">
+	var app = angular.module('myApp',[]);
+	app.controller('aController',['$scope',function($scope){
+		$scope.a = 2;
+		$scope.b = 3;
+		$scope.addition = function(){
+			$scope.a = $scope.a * 2;
+			$scope.b = $scope.b * 2;
+			$scope.sum = $scope.a + $scope.b;
+		}
+		$scope.addTextBoxes = function(){
+			$scope.sum = parseInt($scope.a) + parseInt($scope.b)
+		}
+	}]);
+</script>
+<body ng-app="myApp">
+	<div ng-controller="aController">
+		<!-- a is {{a}}<br>
+		b is {{b}}<br>
+		------------------------<br>
+		a is <span ng-bind="a"></span><br>
+		b is <span ng-bind="b"></span><br>
+		------------------------<br>
+		sum = {{sum}}<br>
+		
+		<button ng-click="addition()"> Calculate </button><br>
+
+		initial value of a is {{::a}}<br>
+		initial value of b is {{::b}}<br> -->
+
+		<H1>TWO WAY BINDING</H1>
+
+		<input type="text" ng-model="a" /><br>
+		<input type="text" ng-model="b" /><br>
+		sum = {{sum}}<br>
+		<button ng-click="addTextBoxes()"> Calculate </button><br>
+
+	</div>
+
+</body>
+</html>

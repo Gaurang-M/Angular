@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.js"></script>
+</head>
+<script type="text/javascript">
+	var module = angular.module('myApp',[]).run(['$rootScope',function($rootScope){
+		$rootScope.taxPercentage = 30;
+	}]);
+	module.controller("emp",["$scope",function($scope){
+		$scope.name = "Gaurang";
+	}]);
+	module.controller("empDetails",["$scope",function($scope){
+		$scope.sal = 3400;
+		$scope.dep = "Computers";
+	}]);
+	module.controller("payCheck",["$scope","$rootScope",function($scope,$rootScope){
+		$scope.getTaxes = function(){
+			return $scope.sal * $rootScope.taxPercentage / 100;
+		}
+		$scope.getNet = function(){
+			return $scope.sal - $scope.getTaxes();
+		}
+	}])
+</script>
+<body ng-app="myApp">
+	<div ng-controller="emp">
+		<div ng-controller="empDetails">
+			<div ng-controller="payCheck">
+				Sal of {{name}} is {{getNet()}} post tax deductions !
+			</div>
+		</div>
+	</div>
+</body>
+</html>
