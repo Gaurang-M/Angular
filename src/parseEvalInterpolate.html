@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.js"></script>
+</head>
+<script type="text/javascript">
+	var app = angular.module("myapp",[]);
+	app.controller("ctrl",["$scope","$parse","$interpolate",function($scope,$parse,$interpolate){
+		$scope.a = 1;
+		$scope.b = 2;
+		$scope.emp = {
+			address:{
+				city: "Mumbai"
+			}
+		};
+
+		$scope.demoEval = function(){
+			// alert("Result : "+ ($scope.a + $scope.b));
+
+			// var r = $scope.$eval("a*b");
+			// alert(r);
+
+			// var r = $scope.$eval("emp.address.city");
+			// alert(r);
+
+			// var r = $scope.$eval("a*b*3*c",{
+			// 	c:5,
+			// 	a:2
+			// });
+			// alert(r);
+
+			var r = $scope.$eval(function(scope,locals){
+				return scope.a * scope.b * locals.a * locals.c	
+			},{
+				a:3,
+				c:2
+			})
+			alert(r);
+		}
+
+		$scope.demoParse = function(){
+			// var f = $parse("a*b");
+			// var r1 = f($scope);
+			// alert(r1);
+
+			// var r2 = f({
+			// 	a:10,
+			// 	b:20
+			// });
+			// alert(r2);
+
+			// alert("results :"+ $parse("a*b")($scope)); 
+
+			alert($parse("emp.address.city")($scope));
+			$parse("emp.address.city").assign($scope, "Pune");
+			alert($parse("emp.address.city")($scope));
+
+		}
+
+		$scope.demoInterpolate = function(){
+			// var f = $interpolate(
+			// 	"{{a*b}} , some other result as well {{a*b*4}}"
+			// 	);
+			// var r1 = f($scope);
+			// alert(r1);
+
+			// alert($interpolate("{{a*b}}")($scope));
+
+			// alert($interpolate("{{a*b | currency:'$'}}")($scope));
+
+		}
+
+
+
+	}])
+</script>
+<body ng-app="myapp"> 
+	<div ng-controller="ctrl">
+		<button ng-click="demoEval()">demoEval</button>
+		<button ng-click="demoParse()">demoParse</button>
+		<button ng-click="demoInterpolate()">demoInterpolate</button>
+	</div>
+</body>
+</html>
