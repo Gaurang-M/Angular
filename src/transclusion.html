@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+	<!-- jQuery library -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+	<!-- Latest compiled JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.js"></script>
+</head>
+<script type="text/javascript">
+	var app = angular.module("myapp",[]);
+	app.controller("employee",["$scope",function($scope){
+	}])
+	app.directive("dropdown",[function(){
+		return {
+			transclude: true,
+			templateUrl: "dropdown.html"
+		}
+	}])
+</script>
+<body ng-app="myapp"> 
+	<div ng-controller="employee">
+		<div dropdown>
+				<span class="glyphicon glyphicon-euro"></span>
+				<div>cool</div>
+		</div>
+	</div>
+</body>
+</html>
