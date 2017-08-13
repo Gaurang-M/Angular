@@ -12,4 +12,4 @@ You should be having you're server up and running on http://localhost:15000
 
 ### Prerequisites
 
-You should be having node insalled.
+You should be having node installed.
