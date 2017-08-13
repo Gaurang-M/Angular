@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular.min.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular-route.js"></script>
+
+<body ng-app="myApp">
+
+<div class="row">
+    <div class="col-sm-12 well">
+        header | <a href="#/">Home</a>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-3 well" style="min-height:100%">
+        <ul>
+           <li><a href="#/sum">Sum</a></li> 
+        </ul>
+    </div>
+    <div class="col-sm-9 well" style="min-height: 100%">
+     <div ng-view></div>   
+    </div>
+</div>
+
+<script>
+var app = angular.module("myApp", ["ngRoute"]);
+
+app.config(function($routeProvider) {
+    $routeProvider
+    .when("/sumInput/:a/:b", {
+        templateUrl: "sumInput.html",
+        controller: "sumInputCtrl",
+        resolve : {
+                sum : function(getRemoteData, $route){
+                    var a = $route.current.params.a;
+                    var b = $route.current.params.b;
+                    return getRemoteData.getData(a,b).then(function(result){
+                        return result.data.data;
+                    })
+            }
+        }
+    })
+    $routeProvider
+    .when("/sum",{
+        template : '<input type="text" ng-model="a"/><br><input type="text" ng-model="b"/><br><button ng-click="doSum()">sum</button><br><p ng-if="isLoading">LOADING...</p>',
+        controller: "sumCtrl"
+    })
+    .when("/", {
+        template : "<div>welcome to my app, select from left panel </div>"
+    })
+    .otherwise({
+        template: "No such route"
+    });
+});
+
+app.controller("sumInputCtrl",["$scope","sum","$routeParams",function($scope,sum,$routeParams){
+    $scope.a = $routeParams.a;
+    $scope.b = $routeParams.b;
+    $scope.sum = sum;
+}])
+
+app.controller("sumCtrl",["$scope","$location","$interpolate","$rootScope",function($scope,$location,$interpolate,$rootScope){
+    $scope.a = 0;
+    $scope.b = 0;
+    $scope.doSum = function(){
+        $location.path($interpolate("/sumInput/{{a}}/{{b}}")($scope));
+    };
+
+    $rootScope.$on('$routeChangeStart',function(e,curr,prev){
+        $scope.isLoading = true;
+    })
+
+    // eventes on rootcope
+    //routeChangeSuccess
+    //routeChangeError
+}])
+
+app.factory('getRemoteData',["$http",function($http){
+    var obj = {};
+    obj.getData  = function(a,b){
+        return $http.get("http://localhost:15000/sum?a="+a+"&b="+b);
+    };
+    return obj;
+}])
+
+</script>
+
+</body>
+</html>

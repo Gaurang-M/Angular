@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.3/angular-ui-router.min.js"></script>
+
+<body ng-app="myApp">
+
+<div class="row">
+    <div class="col-sm-12 well">
+        header | <a href="#/">Home</a>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-3 well" style="min-height:100%">
+        <ul>
+           <li><a ui-sref="employee()">Employee</a></li>
+        </ul>
+    </div>
+    <div class="col-sm-9 well" style="min-height: 100%">
+     <div class="row">
+         <div class="col-sm-12">
+             <div ui-view="emp-header"></div>
+         </div>
+         <div class="col-sm-12">
+             <div ui-view="emp-list"></div>
+         </div>
+         <div class="col-sm-12">
+             <div ui-view="emp-detail"></div>
+         </div>
+     </div>
+    </div>
+</div>
+
+<script>
+var app = angular.module("myApp", ["ui.router"]);
+
+app.config(["$stateProvider","$urlRouterProvider",function($stateProvider,$urlRouterProvider) {
+    $stateProvider
+    .state('employee',{
+        url: "/employee",
+        views: {
+            'emp-header': {
+                templateUrl: "employeeHeader.html"
+            },
+            'emp-list':{
+                templateUrl: "employeeTemplate.html",
+                controller: "employeeCtrl"
+            }
+        }
+    })
+    .state("employeeDetails",{
+        url: "/employeeDetails/:empNo",
+        views: {
+            'emp-header': {
+                templateUrl: "employeeHeader.html"
+            },
+            'emp-detail':{
+                 templateUrl: "employeeDetail.html",
+                 controller:  "employeeDetailCtrl",
+            }
+        }
+    })
+    .state("root", {
+        url: "/",
+        template : "<div>welcome to my app, select from left panel </div>"
+    });
+    $urlRouterProvider.otherwise("/");
+}]);
+
+app.controller("employeeCtrl",["$scope","employeeDataService","$filter",function($scope,employeeDataService,$filter){
+        employeeDataService.getEmployee(function(empData){
+            $scope.empData = empData.map(function(e){
+                e.firstName = $filter('uppercase')(e.firstName);
+                return e;
+            });
+
+        })
+}])
+
+app.service("employeeDataService",["$http",function($http){
+        this.getEmployee = function(cb){
+            $http.get("http://localhost:15000/getAllEmployee")
+            .then(function(response) {
+                cb(response.data.data.data);
+            },function(err){
+
+            });
+        }
+    }])
+
+app.service("employeeDetailService",["$http",function($http){
+        this.getEmployee = function(id,cb){
+            $http.get("http://localhost:15000/getEmployee?empId="+id)
+            .then(function(response) {
+                cb(response.data.data);
+            },function(err){
+
+            });
+        }
+    }])
+
+app.controller("employeeDetailCtrl",["$scope","$stateParams","employeeDetailService",function($scope,$stateParams,employeeDetailService){
+    employeeDetailService.getEmployee($stateParams.empNo,function(emp){
+        $scope.emp = emp;
+    });
+}])
+
+</script>
+
+</body>
+</html>

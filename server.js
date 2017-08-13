@@ -2,9 +2,16 @@ var express = require("express");
 var app     = express();
 var path    = require("path");
 var fs = require("fs");
-app.use(express.static('public'))
 var cors = require('cors');
+
+//set static location on server to host static files
+app.use(express.static('public'))
 app.use(cors()); 
+
+//setting rendering engine
+app.set('views', __dirname  + '/src');
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'html');
 
 const empData = require('./model/data');
 
@@ -34,8 +41,7 @@ fs.readdir('./src', (err, files) => {
   files.forEach(file => {
     let route = file.split(".")[0];
     app.get("/"+route,function(req,res){
-      res.sendFile(path.join(__dirname+'/src/'+file));
-      //__dirname : It will resolve to your project folder. 
+      res.render(file);
     });
   });
 })

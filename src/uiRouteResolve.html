@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.3/angular-ui-router.min.js"></script>
+
+<body ng-app="myApp">
+
+<div class="row">
+    <div class="col-sm-12 well">
+        header | <a href="#/">Home</a>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-3 well" style="min-height:100%">
+        <ul>
+           <li><a ui-sref="sum()">Sum</a></li> 
+        </ul>
+    </div>
+    <div class="col-sm-9 well" style="min-height: 100%">
+     <div ui-view></div>   
+    </div>
+</div>
+
+<script>
+var app = angular.module("myApp", ["ui.router"]);
+
+app.config(["$stateProvider","$urlRouterProvider",function($stateProvider,$urlRouterProvider) {
+    $stateProvider
+    .state("sumInput",{
+        url: "/sumInput/:a/:b",
+        templateUrl: "sumInput.html",
+        controller: "sumInputCtrl",
+        resolve : {
+                sum : function(getRemoteData, $stateParams){
+                    var a = $stateParams.a;
+                    var b = $stateParams.b;
+                    return getRemoteData.getData(a,b).then(function(result){
+                        return result.data.data;
+                    })
+            }
+        }
+    })
+    .state("sum",{
+        ur: "/sum",
+        template : '<input type="text" ng-model="a"/><br><input type="text" ng-model="b"/><br><button ng-click="doSum()">sum</button><br><p ng-if="isLoading">LOADING...</p>',
+        controller: "sumCtrl"
+    })
+    .state("root", {
+        url: "/",
+        template : "<div>welcome to my app, select from left panel </div>"
+    });
+    $urlRouterProvider.otherwise("/");
+}]);
+
+app.controller("sumInputCtrl",["$scope","sum","$stateParams",function($scope,sum,$stateParams){
+    $scope.a = $stateParams.a;
+    $scope.b = $stateParams.b;
+    $scope.sum = sum;
+}])
+
+app.controller("sumCtrl",["$scope","$state","$rootScope",function($scope,$state,$rootScope){
+    $scope.a = 0;
+    $scope.b = 0;
+    $scope.doSum = function(){
+        $state.go("sumInput",{a:$scope.a, b:$scope.b});
+    };
+
+    $rootScope.$on('$stateChangeStart',function(e,toState,toParams,fromState,fromParams, options){
+        $scope.isLoading = true;
+    })
+
+    // eventes on rootcope
+    //routeChangeSuccess
+    //routeChangeError
+}])
+
+app.factory('getRemoteData',["$http",function($http){
+    var obj = {};
+    obj.getData  = function(a,b){
+        return $http.get("http://localhost:15000/sum?a="+a+"&b="+b);
+    };
+    return obj;
+}])
+
+</script>
+
+</body>
+</html>

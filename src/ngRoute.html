@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular.min.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular-route.js"></script>
+
+<body ng-app="myApp">
+
+<div class="row">
+    <div class="col-sm-12 well">
+        header | <a href="#/">Home</a>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-3 well" style="min-height:100%">
+        <ul>
+           <li><a href="#/sumUrl/10/20">Sum Url</a></li>
+           <li><a href="#/sumInput">Sum input</a></li> 
+           <li><a href="#/sumFour/3/4/5/6">Optional route params</a></li>
+        </ul>
+    </div>
+    <div class="col-sm-9 well" style="min-height: 100%">
+     <div ng-view></div>   
+    </div>
+</div>
+
+<script>
+var app = angular.module("myApp", ["ngRoute"]);
+
+app.config(function($routeProvider) {
+    $routeProvider
+    .when("/sumUrl/:a/:b", {
+        templateUrl : "sum2.html",
+        controller: "sumUrlCtrl"
+    })
+    .when("/sumInput", {
+        templateUrl: "sumInput.html",
+        controller: "sumInputCtrl"
+    })
+    .when("/sumFour/:a/:b/:c?/:d?", {
+        templateUrl: "sum4.html",
+        controller: "sumOptionalCtrl"
+    })
+    .when("/calc/:option/:a?/:b?",{
+        redirectTo: function(params, path, search){
+            if(params.option == "sum"){
+                return "/sumUrl/" + (params.a - 0) + "/"+ (params.b - 0);
+            }else if(params.option == "input"){
+                return "/sumInput";
+            }else{
+                return "/"
+            }
+        }
+    })
+    .when("/", {
+        template : "<div>welcome to my app, select from left panel </div>"
+    })
+    .otherwise({
+        template: "No such route"
+    });
+});
+
+app.controller("sumUrlCtrl",["$scope","$routeParams",function($scope,$routeParams){
+    $scope.a = $routeParams.a;
+    $scope.b = $routeParams.b;
+}])
+
+app.controller("sumInputCtrl",["$scope","$location","$interpolate",function($scope,$location,$interpolate){
+    $scope.a = 0;
+    $scope.b = 0;
+
+    $scope.sum= function(){
+        var url = $interpolate("/sumUrl/{{a}}/{{b}}")($scope);
+        $location.path(url);
+    }
+}])
+
+app.controller("sumOptionalCtrl",["$scope","$routeParams",function($scope,$routeParams){
+    $scope.a = $routeParams.a;
+    $scope.b = $routeParams.b;
+    $scope.c = $routeParams.c;
+    $scope.d = $routeParams.d;
+}])
+</script>
+
+</body>
+</html>

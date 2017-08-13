@@ -9,6 +9,7 @@
   },
   "devDependencies": {
     "cors": "^2.8.4",
+    "ejs": "^2.5.7",
     "fs": "0.0.1-security",
     "nodemon": "^1.11.0"
   }
