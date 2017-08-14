@@ -23,21 +23,11 @@
 <div class="row">
     <div class="col-sm-3 well" style="min-height:100%">
         <ul>
-           <li><a ui-sref="employee()">Employee</a></li>
+           <li><a ui-sref="employee.list()">Employee</a></li>
         </ul>
     </div>
     <div class="col-sm-9 well" style="min-height: 100%">
-     <div class="row">
-         <div class="col-sm-12">
-             <div ui-view="emp-header"></div>
-         </div>
-         <div class="col-sm-12">
-             <div ui-view="emp-list"></div>
-         </div>
-         <div class="col-sm-12">
-             <div ui-view="emp-detail"></div>
-         </div>
-     </div>
+        <div ui-view></div>
     </div>
 </div>
 
@@ -47,24 +37,29 @@ var app = angular.module("myApp", ["ui.router"]);
 app.config(["$stateProvider","$urlRouterProvider",function($stateProvider,$urlRouterProvider) {
     $stateProvider
     .state('employee',{
-        url: "/employee/list",
+        url: "/employee",
         views: {
-            'emp-header': {
-                templateUrl: "employeeHeader.html"
+            '' : {
+                templateUrl : "nestedViewTemplate.html"
             },
-            'emp-list':{
+            'emp-header@employee': {
+                templateUrl: "employeeHeader.html"
+            }
+        }
+    })
+    .state('employee.list',{
+        url:"/list",
+        views:{
+            'emp-list@employee':{
                 templateUrl: "employeeTemplate.html",
                 controller: "employeeCtrl"
             }
         }
     })
-    .state("employeeDetails",{
-        url: "/employee/detail/:empNo",
+    .state("employee.details",{
+        url: "/detail/:empNo",
         views: {
-            'emp-header': {
-                templateUrl: "employeeHeader.html"
-            },
-            'emp-detail':{
+            'emp-detail@employee':{
                  templateUrl: "employeeDetail.html",
                  controller:  "employeeDetailCtrl",
             }

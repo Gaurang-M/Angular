@@ -18,7 +18,7 @@
 					</tr>
 				</thead>
 				<tr ng-repeat="emp in empData | filter:{firstName : searchText}">
-					<td><a href="#/employeeDetails/{{emp.id}}">{{emp.id}}</a></td>
+					<td><a href="#/employee/detail/{{emp.id}}">{{emp.id}}</a></td>
 					<td>{{emp.userId}}</td>
 					<td>{{emp.jobTitleName}}</td>
 					<td>{{emp.firstName}}</td>
