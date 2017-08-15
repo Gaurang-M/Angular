@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Angular JS</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.js"></script>
+</head>
+<script type="text/javascript">
+	var app = angular.module("myApp",[]);
+
+	app.run(['$rootScope',function($rootScope){
+
+		//broadcast
+		$rootScope.$on('broadcast',function(n,o){
+			console.log('broadcast : rootscope from => '+ o.data );
+		})
+
+		//emit
+		$rootScope.$on('emit',function(n,o){
+			console.log('emit : rootscope from => '+ o.data );
+		})
+
+	}]);
+
+	app.controller("sibling1",["$scope",function($scope){
+		$scope.a = "Sibling 1";
+
+		//broadcast
+		$scope.broadcast = function(){
+			$scope.$broadcast('broadcast',{data: 'sibling1'});
+		}
+		$scope.$on('broadcast',function(n,o){
+			console.log('broadcast : sibling1 from => '+ o.data );
+		});
+
+		//emit
+		$scope.emit = function(){
+			$scope.$emit('emit',{data: 'sibling1'});
+		}
+		$scope.$on('emit',function(n,o){
+			console.log('emit : sibling1 from => '+ o.data );
+		});
+	}])
+	
+
+	app.controller("sibling2",["$scope",function($scope){
+		$scope.c = "sibling 2";
+
+		//broadcast
+		$scope.broadcast = function(){
+			$scope.$broadcast('broadcast',{data: 'sibling2'});
+		}
+		$scope.$on('broadcast',function(n,o){
+			console.log('broadcast : sibling2 from => '+ o.data );
+		});
+
+		//emit
+		$scope.emit = function(){
+			$scope.$emit('emit',{data: 'sibling2'});
+		}
+		$scope.$on('emit',function(n,o){
+			console.log('emit : sibling2 from => '+ o.data );
+		});
+	}])
+
+	app.controller("child1",["$scope",function($scope){
+		$scope.b = "child 1";
+
+		//broadcast
+		$scope.broadcast = function(){
+			$scope.$broadcast('broadcast',{data: 'child1'});
+		}
+		$scope.$on('broadcast',function(n,o){
+			console.log('broadcast : child1 from => '+ o.data );
+		});
+
+		//emit
+		$scope.emit = function(){
+			$scope.$emit('emit',{data: 'child1'});
+		}
+		$scope.$on('emit',function(n,o){
+			console.log('emit : child1 from => '+ o.data );
+		});
+	}])
+
+</script>
+<body ng-app="myApp">
+	<div style="border: 1px solid green">
+			root scope
+		<div ng-controller="sibling1" style="border: 1px solid blue; margin: 5px;">
+			{{a}}
+			<button ng-click="broadcast()">broadcast</button>
+			<button ng-click="emit()">emit</button>
+				<div ng-controller="child1" style="border: 1px red solid;
+	    margin: 5px;">
+					{{b}}
+					<button ng-click="broadcast()">broadcast</button>
+					<button ng-click="emit()">emit</button>
+				</div> 
+		</div>
+		<div ng-controller="sibling2" style="border: 1px solid blue; margin: 5px;">
+			{{c}}
+			<button ng-click="broadcast()">broadcast</button>
+			<button ng-click="emit()">emit</button>
+		</div>
+	</div>
+</body>
+</html>
