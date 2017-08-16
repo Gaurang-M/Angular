@@ -6,25 +6,27 @@
 </head>
 <script type="text/javascript">
 	var app = angular.module('myApp',[]);
-	app.controller('aController',['$scope','additionService','$http',function($scope,additionService, $http){
-		$http.get("http://localhost:15000/sum?a=2&b=6")
-	    .then(function(response) {
-	        console.log(response);
-    	});
+	app.controller('aController',['$scope','additionService',function($scope,additionService){
 		$scope.a = 2;
 		$scope.b = 3;
 		$scope.addition = function(){
 			$scope.a = $scope.a * 2;
 			$scope.b = $scope.b * 2;
-			$scope.sum = additionService.getSum($scope.a,$scope.b);
+			additionService.getSum($scope.a,$scope.b,function(result){
+				$scope.sum  = result;
+			});
 		}
 		$scope.addTextBoxes = function(){
 			$scope.sum = parseInt($scope.a) + parseInt($scope.b)
 		}
 	}]);
-	app.service("additionService",[function(){
-		this.getSum = function(a,b){
-			return a+b;
+	app.service("additionService",["$http",function($http){
+		this.getSum = function(a,b,cb){
+			$http.get("http://localhost:15000/sum?a="+a+"&b="+b)
+		    .then(function(response) {
+		        cb(response.data.data);
+	    	});
+			//return a+b;
 		}
 	}])
 </script>
